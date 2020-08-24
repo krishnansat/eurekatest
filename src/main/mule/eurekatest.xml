@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:salesforce-analytics="http://www.mulesoft.org/schema/mule/salesforce-analytics"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:eureka-mule="http://www.mulesoft.org/schema/mule/eureka-mule" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/eureka-mule http://www.mulesoft.org/schema/mule/eureka-mule/current/mule-eureka-mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce-analytics http://www.mulesoft.org/schema/mule/salesforce-analytics/current/mule-salesforce-analytics.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="7dd0ce7c-7ac5-4b72-8f2a-3896c390f45d" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="280ecc36-ed87-40e2-983f-e6334ccf61b3" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<eureka-mule:config name="Eureka_Mule_Config" doc:name="Eureka Mule Config" doc:id="90b7054a-013c-4989-b940-3c0926fdfc04" objectStore="Object_store" >
+		<eureka-mule:applications>
+			
+		</eureka-mule:applications>
+		<eureka-mule:eureka-server serverURL="http://eks.tools.mulesoft.com:30020" eurekaPath="/eureka" />
+		<eureka-mule:application appId="IAGMuleApp" appHost="localhost" appPort="8081" appIpAddr="127.0.0.1" />
+	</eureka-mule:config>
+	<flow name="eurekatestFlow" doc:id="a9433c68-22a1-40f0-9964-d4911154a9b1" >
+		<http:listener doc:name="Listener" doc:id="60485d7c-4c8a-4147-a962-50d7004eb363" config-ref="HTTP_Listener_config" path="/test"/>
+		<os:retrieve-all doc:name="Retrieve all" doc:id="50268c8a-ea5a-4a94-93c7-cb52101d02f1" objectStore="Object_store"/>
+		<logger level="INFO" doc:name="Logger" doc:id="38371f44-f1bd-4e78-bc6d-a645f775e31e" message="#[%dw 2.0
+output application/json
+---
+payload]"/>
+	</flow>
+</mule>
